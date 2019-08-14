@@ -2,13 +2,14 @@
 <launch>
 	<arg name="sim" default="false"/>
 
-	<param name="/camera/camera_nodelet/frame_rate" value="30"/>
+	<param name="/camera/camera_nodelet/frame_rate" value="60"/>
 
 	<!-- Sensor parameters -->
 	<include file="$(find pointgrey_camera_driver)/launch/camera.launch" if="$(eval not arg('sim'))">
-		<!-- blackfly: 16029630 -->
-		<arg name="camera_serial" value="16029630"/>
+		<!-- blackfly: 16029630  flea3: 15631925 -->
+		<arg name="camera_serial" value="15631925"/>
 		<arg name="calibrated" value="1"/>
+
 	</include>
 
 	<node pkg="image_transport" type="republish" name="decompress" args="compressed in:=image_mono raw out:=image_mono" if="$(arg sim)"/>
