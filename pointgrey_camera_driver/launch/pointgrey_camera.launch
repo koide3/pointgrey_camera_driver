@@ -2,20 +2,20 @@
 <launch>
 	<arg name="sim" default="false"/>
 
-	<param name="/camera/camera_nodelet/frame_rate" value="60"/>
+	<param name="/camera/camera_nodelet/frame_rate" value="30"/>
 
 	<!-- Sensor parameters -->
 	<include file="$(find pointgrey_camera_driver)/launch/camera.launch" if="$(eval not arg('sim'))">
 		<!-- blackfly: 16029630  flea3: 15631925 -->
 		<arg name="camera_serial" value="15631925"/>
-		<arg name="calibrated" value="1"/>
-
+		<arg name="calibrated" value="0"/>
+		<arg name="video_mode" value="format7_mode0"/>
 	</include>
 
-	<node pkg="image_transport" type="republish" name="decompress" args="compressed in:=image_mono raw out:=image_mono" if="$(arg sim)"/>
-
 	<group ns="camera">
+		<node pkg="image_transport" type="republish" name="decompress" args="compressed in:=image_raw raw out:=image_raw" if="$(arg sim)"/>
 		<node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" args="manager" if="$(arg sim)"/>
+		<node pkg="nodelet" type="nodelet" name="image_proc_debayer" args="standalone image_proc/debayer camera_nodelet_manager" if="$(arg sim)"/>
 
 		<!--camera_nodelet_manager-->
 		<node pkg="nodelet" type="nodelet" name="pointgrey_rectify" args="load image_proc/rectify camera_nodelet_manager">

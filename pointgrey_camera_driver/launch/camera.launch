@@ -4,12 +4,18 @@
   <arg name="camera_name" default="camera" />
   <arg name="camera_serial" default="0" />
   <arg name="calibrated" default="0" />
+  <arg name="video_mode" default="format7_mode0" />
+  <arg name="format7_roi_width" default="0"/>
+  <arg name="format7_roi_height" default="0"/>
 
   <group ns="$(arg camera_name)">
     <node pkg="nodelet" type="nodelet" name="camera_nodelet_manager" args="manager" />
 
     <node pkg="nodelet" type="nodelet" name="camera_nodelet"
           args="standalone pointgrey_camera_driver/PointGreyCameraNodelet camera_nodelet_manager" output="screen">
+      <param name="video_mode" value="$(arg video_mode)" />
+      <param name="format7_roi_width" value="$(arg format7_roi_width)" />
+      <param name="format7_roi_height" value="$(arg format7_roi_height)" />
       <param name="frame_id" value="camera" />
       <param name="serial" value="$(arg camera_serial)" />
 
